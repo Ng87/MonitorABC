@@ -50,7 +50,7 @@
             // serialportPc
             // 
             this.serialportPc.PortName = "NULL";
-            this.serialportPc.ReadTimeout = 2000;
+            this.serialportPc.ReadTimeout = 100;
             // 
             // checkboxAuto
             // 

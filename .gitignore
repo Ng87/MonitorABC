@@ -45,3 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+MonitorABC/obj/Debug/*
+ArduinoSensor/Debug/*
+ArduinoSensor/__vm/*
+.vs/Monitor_ABC/v15/*

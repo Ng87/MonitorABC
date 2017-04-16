@@ -56,6 +56,8 @@ namespace WindowsFormsApp1
                 try
                 {
                     serialportPc.Open();
+                    serialportPc.DiscardOutBuffer();
+                    serialportPc.WriteLine("SensorQuery");
                     serialportPc.DiscardInBuffer();     // The input buffer of the serial port must be discarded before reading a new string
                     string portread = serialportPc.ReadLine();
                     serialportPc.Close();
@@ -162,7 +164,9 @@ namespace WindowsFormsApp1
                 /// Preparing serial port
                 serialportPc.DiscardInBuffer();
 
-                /// read a string from the serial port and close it
+                /// Demand a new measure to the sensor
+                serialportPc.DiscardOutBuffer();
+                serialportPc.WriteLine("SensorQuery");
                 string indata = serialportPc.ReadLine();
                 serialportPc.Close();
 
@@ -209,9 +213,9 @@ namespace WindowsFormsApp1
                 System.Diagnostics.Debug.WriteLine("ERROR: serial port unavailable!");
             }
 
-            
+            trackbarBrightness.Value = Convert.ToInt16(CurrentBrightness * 100);
         }
-
+        
 
 
 
