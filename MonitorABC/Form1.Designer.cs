@@ -41,19 +41,24 @@
             this.labelPort = new System.Windows.Forms.Label();
             this.labelUpdatePeriod = new System.Windows.Forms.Label();
             this.numericUpdatePeriod = new System.Windows.Forms.NumericUpDown();
-            this.labelStatusSensor = new System.Windows.Forms.Label();
-            this.buttonUpdate = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.buttonUpdate = new System.Windows.Forms.Button();
+            this.labelStatusTitle = new System.Windows.Forms.Label();
             this.numericBrightness = new System.Windows.Forms.NumericUpDown();
             this.notifyiconApp = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextmenustripSystemTray = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuitemAutoUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuitemClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.numericOffset = new System.Windows.Forms.NumericUpDown();
+            this.labelOffset = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarBrightness)).BeginInit();
             this.groupboxSensor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpdatePeriod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             this.contextmenustripSystemTray.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // trackbarBrightness
@@ -63,7 +68,7 @@
             this.trackbarBrightness.Maximum = 100;
             this.trackbarBrightness.Name = "trackbarBrightness";
             this.trackbarBrightness.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackbarBrightness.Size = new System.Drawing.Size(45, 141);
+            this.trackbarBrightness.Size = new System.Drawing.Size(45, 165);
             this.trackbarBrightness.SmallChange = 10;
             this.trackbarBrightness.TabIndex = 1;
             this.trackbarBrightness.TickFrequency = 10;
@@ -79,7 +84,7 @@
             this.checkboxAuto.AutoSize = true;
             this.checkboxAuto.Checked = true;
             this.checkboxAuto.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxAuto.Location = new System.Drawing.Point(15, 88);
+            this.checkboxAuto.Location = new System.Drawing.Point(15, 91);
             this.checkboxAuto.Name = "checkboxAuto";
             this.checkboxAuto.Size = new System.Drawing.Size(86, 17);
             this.checkboxAuto.TabIndex = 2;
@@ -96,7 +101,7 @@
             // labelMin
             // 
             this.labelMin.AutoSize = true;
-            this.labelMin.Location = new System.Drawing.Point(53, 159);
+            this.labelMin.Location = new System.Drawing.Point(53, 184);
             this.labelMin.Name = "labelMin";
             this.labelMin.Size = new System.Drawing.Size(24, 13);
             this.labelMin.TabIndex = 2;
@@ -113,18 +118,18 @@
             // 
             // groupboxSensor
             // 
+            this.groupboxSensor.Controls.Add(this.labelOffset);
+            this.groupboxSensor.Controls.Add(this.numericOffset);
             this.groupboxSensor.Controls.Add(this.labelSensorPort);
             this.groupboxSensor.Controls.Add(this.labelPort);
             this.groupboxSensor.Controls.Add(this.labelUpdatePeriod);
             this.groupboxSensor.Controls.Add(this.numericUpdatePeriod);
-            this.groupboxSensor.Controls.Add(this.labelStatusSensor);
             this.groupboxSensor.Controls.Add(this.buttonUpdate);
-            this.groupboxSensor.Controls.Add(this.labelStatus);
             this.groupboxSensor.Controls.Add(this.checkboxAuto);
             this.groupboxSensor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupboxSensor.Location = new System.Drawing.Point(103, 12);
             this.groupboxSensor.Name = "groupboxSensor";
-            this.groupboxSensor.Size = new System.Drawing.Size(161, 168);
+            this.groupboxSensor.Size = new System.Drawing.Size(161, 192);
             this.groupboxSensor.TabIndex = 4;
             this.groupboxSensor.TabStop = false;
             this.groupboxSensor.Text = "Sensor";
@@ -152,7 +157,7 @@
             // labelUpdatePeriod
             // 
             this.labelUpdatePeriod.AutoSize = true;
-            this.labelUpdatePeriod.Location = new System.Drawing.Point(67, 116);
+            this.labelUpdatePeriod.Location = new System.Drawing.Point(67, 127);
             this.labelUpdatePeriod.Name = "labelUpdatePeriod";
             this.labelUpdatePeriod.Size = new System.Drawing.Size(88, 13);
             this.labelUpdatePeriod.TabIndex = 7;
@@ -160,9 +165,14 @@
             // 
             // numericUpdatePeriod
             // 
-            this.numericUpdatePeriod.Location = new System.Drawing.Point(15, 112);
+            this.numericUpdatePeriod.Location = new System.Drawing.Point(15, 123);
             this.numericUpdatePeriod.Maximum = new decimal(new int[] {
             600,
+            0,
+            0,
+            0});
+            this.numericUpdatePeriod.Minimum = new decimal(new int[] {
+            1,
             0,
             0,
             0});
@@ -176,18 +186,18 @@
             0});
             this.numericUpdatePeriod.ValueChanged += new System.EventHandler(this.numericUpdatePeriod_ValueChanged);
             // 
-            // labelStatusSensor
+            // labelStatus
             // 
-            this.labelStatusSensor.AutoSize = true;
-            this.labelStatusSensor.Location = new System.Drawing.Point(45, 150);
-            this.labelStatusSensor.Name = "labelStatusSensor";
-            this.labelStatusSensor.Size = new System.Drawing.Size(96, 13);
-            this.labelStatusSensor.TabIndex = 3;
-            this.labelStatusSensor.Text = "searching sensor...";
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(48, 214);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(96, 13);
+            this.labelStatus.TabIndex = 3;
+            this.labelStatus.Text = "searching sensor...";
             // 
             // buttonUpdate
             // 
-            this.buttonUpdate.Location = new System.Drawing.Point(15, 48);
+            this.buttonUpdate.Location = new System.Drawing.Point(15, 51);
             this.buttonUpdate.Name = "buttonUpdate";
             this.buttonUpdate.Size = new System.Drawing.Size(126, 24);
             this.buttonUpdate.TabIndex = 4;
@@ -195,14 +205,14 @@
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
-            // labelStatus
+            // labelStatusTitle
             // 
-            this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(6, 150);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(40, 13);
-            this.labelStatus.TabIndex = 2;
-            this.labelStatus.Text = "Status:";
+            this.labelStatusTitle.AutoSize = true;
+            this.labelStatusTitle.Location = new System.Drawing.Point(2, 214);
+            this.labelStatusTitle.Name = "labelStatusTitle";
+            this.labelStatusTitle.Size = new System.Drawing.Size(40, 13);
+            this.labelStatusTitle.TabIndex = 2;
+            this.labelStatusTitle.Text = "Status:";
             // 
             // numericBrightness
             // 
@@ -226,39 +236,76 @@
             this.menuitemAutoUpdate,
             this.menuitemClose});
             this.contextmenustripSystemTray.Name = "contextMenuStrip1";
-            this.contextmenustripSystemTray.Size = new System.Drawing.Size(153, 70);
+            this.contextmenustripSystemTray.Size = new System.Drawing.Size(144, 48);
             // 
             // menuitemAutoUpdate
             // 
             this.menuitemAutoUpdate.Checked = true;
             this.menuitemAutoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.menuitemAutoUpdate.Name = "menuitemAutoUpdate";
-            this.menuitemAutoUpdate.Size = new System.Drawing.Size(152, 22);
+            this.menuitemAutoUpdate.Size = new System.Drawing.Size(143, 22);
             this.menuitemAutoUpdate.Text = "Auto-Update";
             this.menuitemAutoUpdate.Click += new System.EventHandler(this.menuitemAutoUpdate_Click);
             // 
             // menuitemClose
             // 
             this.menuitemClose.Name = "menuitemClose";
-            this.menuitemClose.Size = new System.Drawing.Size(152, 22);
+            this.menuitemClose.Size = new System.Drawing.Size(143, 22);
             this.menuitemClose.Text = "Close";
             this.menuitemClose.Click += new System.EventHandler(this.menuitemClose_Click);
+            // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // numericOffset
+            // 
+            this.numericOffset.Location = new System.Drawing.Point(15, 153);
+            this.numericOffset.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericOffset.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.numericOffset.Name = "numericOffset";
+            this.numericOffset.Size = new System.Drawing.Size(46, 20);
+            this.numericOffset.TabIndex = 10;
+            this.numericOffset.ValueChanged += new System.EventHandler(this.numericOffset_ValueChanged);
+            // 
+            // labelOffset
+            // 
+            this.labelOffset.AutoSize = true;
+            this.labelOffset.Location = new System.Drawing.Point(68, 157);
+            this.labelOffset.Name = "labelOffset";
+            this.labelOffset.Size = new System.Drawing.Size(52, 13);
+            this.labelOffset.TabIndex = 11;
+            this.labelOffset.Text = "Offset [%]";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 183);
+            this.ClientSize = new System.Drawing.Size(277, 229);
             this.Controls.Add(this.numericBrightness);
             this.Controls.Add(this.groupboxSensor);
             this.Controls.Add(this.labelMax);
+            this.Controls.Add(this.labelStatus);
+            this.Controls.Add(this.labelStatusTitle);
             this.Controls.Add(this.labelMin);
             this.Controls.Add(this.trackbarBrightness);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(293, 268);
+            this.MinimumSize = new System.Drawing.Size(293, 268);
             this.Name = "Form1";
             this.ShowInTaskbar = false;
             this.Text = "Monitor Brightness Control";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.trackbarBrightness)).EndInit();
@@ -267,6 +314,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpdatePeriod)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).EndInit();
             this.contextmenustripSystemTray.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -281,8 +330,8 @@
         private System.Windows.Forms.Label labelMin;
         private System.Windows.Forms.Label labelMax;
         private System.Windows.Forms.GroupBox groupboxSensor;
+        private System.Windows.Forms.Label labelStatusTitle;
         private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.Label labelStatusSensor;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Label labelUpdatePeriod;
         private System.Windows.Forms.NumericUpDown numericUpdatePeriod;
@@ -293,6 +342,9 @@
         private System.Windows.Forms.ContextMenuStrip contextmenustripSystemTray;
         private System.Windows.Forms.ToolStripMenuItem menuitemClose;
         private System.Windows.Forms.ToolStripMenuItem menuitemAutoUpdate;
+        private System.Windows.Forms.Label labelOffset;
+        private System.Windows.Forms.NumericUpDown numericOffset;
+        private System.IO.FileSystemWatcher fileSystemWatcher1;
     }
 }
 
