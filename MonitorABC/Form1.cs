@@ -287,6 +287,8 @@ namespace WindowsFormsApp1
             /// Preparing next call to this function 
             timerSensor.Start();
 
+            GetBrightness(sender, e);
+
             /// The monitor brightness will be set only if there is a sostantial difference between the new brightness and the old brightness.
             if (!AcquireBrightness(sender, e) && (NewBrightness > (CurrentBrightness + 0.05) || NewBrightness < (CurrentBrightness - 0.05)))
             {
@@ -310,6 +312,9 @@ namespace WindowsFormsApp1
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
             /// The monitor brightness will be set only if there is a sostantial difference between the new brightness and the old brightness.
+
+            GetBrightness(sender, e);
+
             if (!AcquireBrightness(sender, e))
             {
                 SetBrightness(sender, e);
