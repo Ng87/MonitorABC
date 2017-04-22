@@ -139,20 +139,19 @@ namespace WindowsFormsApp1
         /// 
         private void GetBrightness(object sender, EventArgs e)
         {
-            physicalMonitors = DisplayConfiguration.GetPhysicalMonitors(DisplayConfiguration.GetCurrentMonitor());
-            foreach (DisplayConfiguration.PHYSICAL_MONITOR physicalMonitor in physicalMonitors)
+            try
             {
-                try
-                {
+                physicalMonitors = DisplayConfiguration.GetPhysicalMonitors(DisplayConfiguration.GetCurrentMonitor());
+                foreach (DisplayConfiguration.PHYSICAL_MONITOR physicalMonitor in physicalMonitors)
                     CurrentBrightness = DisplayConfiguration.GetMonitorBrightness(physicalMonitor);
-                }
-                catch
-                {
-                    System.Diagnostics.Debug.WriteLine("ERROR: cannot get brightness!");
-                    labelStatus.Text = "could not get brightness!";
-                }
             }
-
+            
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR: cannot get brightness!");
+                labelStatus.Text = "could not get brightness!";
+            }
+            
             UpdateObjects(sender, e);
         }
 
@@ -170,22 +169,21 @@ namespace WindowsFormsApp1
         {
             if (NewBrightness != CurrentBrightness)
             {
-                // Get current monitors
-                physicalMonitors = DisplayConfiguration.GetPhysicalMonitors(DisplayConfiguration.GetCurrentMonitor());
-
-                foreach (DisplayConfiguration.PHYSICAL_MONITOR physicalMonitor in physicalMonitors)
+                try
                 {
-                    try
+                    physicalMonitors = DisplayConfiguration.GetPhysicalMonitors(DisplayConfiguration.GetCurrentMonitor());
+
+                    foreach (DisplayConfiguration.PHYSICAL_MONITOR physicalMonitor in physicalMonitors)
                     {
                         DisplayConfiguration.SetMonitorBrightness(physicalMonitor, NewBrightness);
                         DisplayConfiguration.SetMonitorContrast(physicalMonitor, NewBrightness);
                         CurrentBrightness = NewBrightness;
                     }
-                    catch
-                    {
-                        System.Diagnostics.Debug.WriteLine("ERROR: cannot set brightness!");
-                        labelStatus.Text = "could not set brightness!";
-                    }
+                }
+                catch
+                {
+                    System.Diagnostics.Debug.WriteLine("ERROR: cannot set brightness!");
+                    labelStatus.Text = "could not set brightness!";
                 }
             }
 

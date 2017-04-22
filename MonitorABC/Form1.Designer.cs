@@ -37,12 +37,14 @@
             this.labelMin = new System.Windows.Forms.Label();
             this.labelMax = new System.Windows.Forms.Label();
             this.groupboxSensor = new System.Windows.Forms.GroupBox();
+            this.labelOffset = new System.Windows.Forms.Label();
+            this.numericOffset = new System.Windows.Forms.NumericUpDown();
             this.labelSensorPort = new System.Windows.Forms.Label();
             this.labelPort = new System.Windows.Forms.Label();
             this.labelUpdatePeriod = new System.Windows.Forms.Label();
             this.numericUpdatePeriod = new System.Windows.Forms.NumericUpDown();
-            this.labelStatus = new System.Windows.Forms.Label();
             this.buttonUpdate = new System.Windows.Forms.Button();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.labelStatusTitle = new System.Windows.Forms.Label();
             this.numericBrightness = new System.Windows.Forms.NumericUpDown();
             this.notifyiconApp = new System.Windows.Forms.NotifyIcon(this.components);
@@ -50,21 +52,19 @@
             this.menuitemAutoUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuitemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.numericOffset = new System.Windows.Forms.NumericUpDown();
-            this.labelOffset = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarBrightness)).BeginInit();
             this.groupboxSensor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpdatePeriod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).BeginInit();
             this.contextmenustripSystemTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).BeginInit();
             this.SuspendLayout();
             // 
             // trackbarBrightness
             // 
             this.trackbarBrightness.LargeChange = 100;
-            this.trackbarBrightness.Location = new System.Drawing.Point(22, 39);
+            this.trackbarBrightness.Location = new System.Drawing.Point(49, 39);
             this.trackbarBrightness.Maximum = 100;
             this.trackbarBrightness.Name = "trackbarBrightness";
             this.trackbarBrightness.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -101,7 +101,7 @@
             // labelMin
             // 
             this.labelMin.AutoSize = true;
-            this.labelMin.Location = new System.Drawing.Point(53, 184);
+            this.labelMin.Location = new System.Drawing.Point(80, 184);
             this.labelMin.Name = "labelMin";
             this.labelMin.Size = new System.Drawing.Size(24, 13);
             this.labelMin.TabIndex = 2;
@@ -110,7 +110,7 @@
             // labelMax
             // 
             this.labelMax.AutoSize = true;
-            this.labelMax.Location = new System.Drawing.Point(53, 46);
+            this.labelMax.Location = new System.Drawing.Point(80, 46);
             this.labelMax.Name = "labelMax";
             this.labelMax.Size = new System.Drawing.Size(27, 13);
             this.labelMax.TabIndex = 3;
@@ -127,12 +127,39 @@
             this.groupboxSensor.Controls.Add(this.buttonUpdate);
             this.groupboxSensor.Controls.Add(this.checkboxAuto);
             this.groupboxSensor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupboxSensor.Location = new System.Drawing.Point(103, 12);
+            this.groupboxSensor.Location = new System.Drawing.Point(144, 19);
             this.groupboxSensor.Name = "groupboxSensor";
-            this.groupboxSensor.Size = new System.Drawing.Size(161, 192);
+            this.groupboxSensor.Size = new System.Drawing.Size(181, 192);
             this.groupboxSensor.TabIndex = 4;
             this.groupboxSensor.TabStop = false;
             this.groupboxSensor.Text = "Sensor";
+            // 
+            // labelOffset
+            // 
+            this.labelOffset.AutoSize = true;
+            this.labelOffset.Location = new System.Drawing.Point(68, 157);
+            this.labelOffset.Name = "labelOffset";
+            this.labelOffset.Size = new System.Drawing.Size(52, 13);
+            this.labelOffset.TabIndex = 11;
+            this.labelOffset.Text = "Offset [%]";
+            // 
+            // numericOffset
+            // 
+            this.numericOffset.Location = new System.Drawing.Point(15, 153);
+            this.numericOffset.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericOffset.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.numericOffset.Name = "numericOffset";
+            this.numericOffset.Size = new System.Drawing.Size(46, 20);
+            this.numericOffset.TabIndex = 10;
+            this.numericOffset.ValueChanged += new System.EventHandler(this.numericOffset_ValueChanged);
             // 
             // labelSensorPort
             // 
@@ -186,15 +213,6 @@
             0});
             this.numericUpdatePeriod.ValueChanged += new System.EventHandler(this.numericUpdatePeriod_ValueChanged);
             // 
-            // labelStatus
-            // 
-            this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(48, 214);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(96, 13);
-            this.labelStatus.TabIndex = 3;
-            this.labelStatus.Text = "searching sensor...";
-            // 
             // buttonUpdate
             // 
             this.buttonUpdate.Location = new System.Drawing.Point(15, 51);
@@ -204,6 +222,15 @@
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(48, 214);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(96, 13);
+            this.labelStatus.TabIndex = 3;
+            this.labelStatus.Text = "searching sensor...";
             // 
             // labelStatusTitle
             // 
@@ -216,7 +243,7 @@
             // 
             // numericBrightness
             // 
-            this.numericBrightness.Location = new System.Drawing.Point(20, 13);
+            this.numericBrightness.Location = new System.Drawing.Point(39, 13);
             this.numericBrightness.Name = "numericBrightness";
             this.numericBrightness.Size = new System.Drawing.Size(47, 20);
             this.numericBrightness.TabIndex = 0;
@@ -259,38 +286,11 @@
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
-            // numericOffset
-            // 
-            this.numericOffset.Location = new System.Drawing.Point(15, 153);
-            this.numericOffset.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.numericOffset.Minimum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            -2147483648});
-            this.numericOffset.Name = "numericOffset";
-            this.numericOffset.Size = new System.Drawing.Size(46, 20);
-            this.numericOffset.TabIndex = 10;
-            this.numericOffset.ValueChanged += new System.EventHandler(this.numericOffset_ValueChanged);
-            // 
-            // labelOffset
-            // 
-            this.labelOffset.AutoSize = true;
-            this.labelOffset.Location = new System.Drawing.Point(68, 157);
-            this.labelOffset.Name = "labelOffset";
-            this.labelOffset.Size = new System.Drawing.Size(52, 13);
-            this.labelOffset.TabIndex = 11;
-            this.labelOffset.Text = "Offset [%]";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(277, 229);
+            this.ClientSize = new System.Drawing.Size(337, 229);
             this.Controls.Add(this.numericBrightness);
             this.Controls.Add(this.groupboxSensor);
             this.Controls.Add(this.labelMax);
@@ -299,8 +299,8 @@
             this.Controls.Add(this.labelMin);
             this.Controls.Add(this.trackbarBrightness);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(293, 268);
-            this.MinimumSize = new System.Drawing.Size(293, 268);
+            this.MaximumSize = new System.Drawing.Size(353, 268);
+            this.MinimumSize = new System.Drawing.Size(353, 268);
             this.Name = "Form1";
             this.ShowInTaskbar = false;
             this.Text = "Monitor Brightness Control";
@@ -311,11 +311,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackbarBrightness)).EndInit();
             this.groupboxSensor.ResumeLayout(false);
             this.groupboxSensor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpdatePeriod)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBrightness)).EndInit();
             this.contextmenustripSystemTray.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
