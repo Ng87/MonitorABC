@@ -52,6 +52,7 @@
             this.menuitemAutoUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuitemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.timerSetBrightness = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackbarBrightness)).BeginInit();
             this.groupboxSensor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericOffset)).BeginInit();
@@ -286,6 +287,11 @@
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // timerSetBrightness
+            // 
+            this.timerSetBrightness.Tick += new System.EventHandler(this.timerSetBrightness_Tick);
+            this.timerSetBrightness.Interval = 150;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -345,6 +351,7 @@
         private System.Windows.Forms.Label labelOffset;
         private System.Windows.Forms.NumericUpDown numericOffset;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.Timer timerSetBrightness;
     }
 }
 

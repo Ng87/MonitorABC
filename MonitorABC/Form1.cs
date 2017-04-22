@@ -332,9 +332,10 @@ namespace WindowsFormsApp1
         /// 
         private void trackbarBrightness_Scroll(object sender, EventArgs e)
         {
+            timerSetBrightness.Stop();
+            timerSetBrightness.Start();
             System.Diagnostics.Debug.WriteLine("TRACKBAR = " + trackbarBrightness.Value);
             NewBrightness = Convert.ToDouble(trackbarBrightness.Value) / 100;
-            SetBrightness(sender, e);
 
             /// When the user manually changes the monitor brightness, Auto-update feature will be disabled.
             checkboxAuto.Checked = false;
@@ -373,10 +374,11 @@ namespace WindowsFormsApp1
         /// <param name="e"></param>
         private void numericBrightness_ValueChanged(object sender, EventArgs e)
         {
+            timerSetBrightness.Stop();
             System.Diagnostics.Debug.WriteLine("NUMERIC = " + numericBrightness.Value);
             NewBrightness = Convert.ToDouble(numericBrightness.Value) / 100;
             checkboxAuto.Checked = false;
-            SetBrightness(sender, e);
+            timerSetBrightness.Start();
         }
 
    
@@ -409,7 +411,13 @@ namespace WindowsFormsApp1
         {
             if (checkboxAuto.Checked)
             {
-                buttonUpdate_Click(sender, e);
+                GetBrightness(sender, e);
+
+                if (!AcquireBrightness(sender, e))
+                {
+                    timerSetBrightness.Stop();
+                    timerSetBrightness.Start();
+                }
             }
         }
 
@@ -540,5 +548,18 @@ namespace WindowsFormsApp1
         }
 
 
+        /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Title:          TIMER SET BRIGHTNESS TICK
+        /// Description:    this timer is used to add a delay at the call of SetBrightness, in order to make brightness gadgets more fluid.
+        /// </summary>
+        /// 
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
+        private void timerSetBrightness_Tick(object sender, EventArgs e)
+        {
+            SetBrightness(sender, e);
+        }
     }
 }
