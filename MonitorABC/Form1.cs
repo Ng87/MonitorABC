@@ -18,7 +18,6 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -26,7 +25,7 @@ namespace WindowsFormsApp1
             System.Diagnostics.Debug.WriteLine("Starting...");
             GetUserConfiguration(sender, e);
             GetBrightness(sender, e);
-            timerSensor_Tick(sender, e);  
+            timerSensor_Tick(sender, e);
         }
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,37 +72,46 @@ namespace WindowsFormsApp1
         /// 
         private bool SearchSensor()
         {
-            // Get a list of serial port names.
-            string[] ports = SerialPort.GetPortNames();
-
-            foreach (string port in ports)
+            try
             {
-                serialportPc.PortName = port;
-                try
+                // Get a list of serial port names.
+                string[] ports = SerialPort.GetPortNames();
+
+                foreach (string port in ports)
                 {
-                    serialportPc.Open();
-                    serialportPc.DiscardOutBuffer();
-                    serialportPc.WriteLine("SensorQuery");
-                    serialportPc.DiscardInBuffer();     // The input buffer of the serial port must be discarded before reading a new string
-                    string portread = serialportPc.ReadLine();
-                    serialportPc.Close();
-                    if (portread.StartsWith("BrightnessSensor"))
+                    serialportPc.PortName = port;
+                    try
                     {
-                        System.Diagnostics.Debug.WriteLine("Sensor found on " + port);
-                        labelStatus.Text = "Ok";
-                        labelSensorPort.Text = port;
-                        labelSensorPort.ForeColor = System.Drawing.Color.Green;
-                        return true;
+                        serialportPc.Open();
+                        serialportPc.DiscardOutBuffer();
+                        serialportPc.WriteLine("SensorQuery");
+                        serialportPc.DiscardInBuffer();     // The input buffer of the serial port must be discarded before reading a new string
+                        string portread = serialportPc.ReadLine();
+                        serialportPc.Close();
+                        if (portread.StartsWith("BrightnessSensor"))
+                        {
+                            System.Diagnostics.Debug.WriteLine("Sensor found on " + port);
+                            labelStatus.Text = "Ok";
+                            labelSensorPort.Text = port;
+                            labelSensorPort.ForeColor = System.Drawing.Color.Green;
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        System.Diagnostics.Debug.WriteLine("Sensor not found!");
+                        labelStatus.Text = "sensor not found!";
+                        serialportPc.Close();
                     }
                 }
-                catch
-                {
-                    serialportPc.Close();
-                }
             }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("No serial ports available!");
+                labelStatus.Text = "No serial ports available!";
+            }
+
             serialportPc.PortName = "NULL";
-            System.Diagnostics.Debug.WriteLine("Sensor not found!");
-            labelStatus.Text = "sensor not found!";
             labelSensorPort.Text = "sensor not found!";
             labelSensorPort.ForeColor = System.Drawing.Color.Red;
             return false;
@@ -142,16 +150,26 @@ namespace WindowsFormsApp1
             try
             {
                 physicalMonitors = DisplayConfiguration.GetPhysicalMonitors(DisplayConfiguration.GetCurrentMonitor());
+
                 foreach (DisplayConfiguration.PHYSICAL_MONITOR physicalMonitor in physicalMonitors)
-                    CurrentBrightness = DisplayConfiguration.GetMonitorBrightness(physicalMonitor);
+                {
+                    try
+                    {
+                        CurrentBrightness = DisplayConfiguration.GetMonitorBrightness(physicalMonitor);
+                    }
+                    catch
+                    {
+                        System.Diagnostics.Debug.WriteLine("ERROR: cannot get brightness!");
+                        labelStatus.Text = "could not get brightness!";
+                    }
+                }
             }
-            
             catch
             {
-                System.Diagnostics.Debug.WriteLine("ERROR: cannot get brightness!");
-                labelStatus.Text = "could not get brightness!";
+                System.Diagnostics.Debug.WriteLine("ERROR: cannot find monitors!");
+                labelStatus.Text = "could not find monitors!";
             }
-            
+
             UpdateObjects(sender, e);
         }
 
@@ -172,18 +190,26 @@ namespace WindowsFormsApp1
                 try
                 {
                     physicalMonitors = DisplayConfiguration.GetPhysicalMonitors(DisplayConfiguration.GetCurrentMonitor());
-
+                
                     foreach (DisplayConfiguration.PHYSICAL_MONITOR physicalMonitor in physicalMonitors)
                     {
-                        DisplayConfiguration.SetMonitorBrightness(physicalMonitor, NewBrightness);
-                        DisplayConfiguration.SetMonitorContrast(physicalMonitor, NewBrightness);
-                        CurrentBrightness = NewBrightness;
+                        try
+                        {
+                            DisplayConfiguration.SetMonitorBrightness(physicalMonitor, NewBrightness);
+                            DisplayConfiguration.SetMonitorContrast(physicalMonitor, NewBrightness);
+                            CurrentBrightness = NewBrightness;
+                        }
+                        catch
+                        {
+                            System.Diagnostics.Debug.WriteLine("ERROR: cannot set brightness!");
+                            labelStatus.Text = "could not set brightness!";
+                        }
                     }
                 }
                 catch
                 {
-                    System.Diagnostics.Debug.WriteLine("ERROR: cannot set brightness!");
-                    labelStatus.Text = "could not set brightness!";
+                    System.Diagnostics.Debug.WriteLine("ERROR: cannot find monitors!");
+                    labelStatus.Text = "could not find monitors!";
                 }
             }
 
@@ -433,17 +459,26 @@ namespace WindowsFormsApp1
         /// 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            if (FormWindowState.Minimized == this.WindowState)
+            /// Delete existing FormClosing event handlers. It prevents that multiple FormClosing event handlers are called at the same time.
+            FormClosing -= new System.Windows.Forms.FormClosingEventHandler(Form_PuttingInTaskbar);
+            FormClosing -= new System.Windows.Forms.FormClosingEventHandler(Form_Closing);
+
+            if (WindowState == FormWindowState.Minimized)
             {
-                notifyiconApp.Visible = true;   
-                this.Hide();
+                notifyiconApp.Visible = true;
+                /// the next line disables the re-definition of the FormClosing Event in order to trigger the default one in order to terminate the application.
+                FormClosing -= new System.Windows.Forms.FormClosingEventHandler(Form_PuttingInTaskbar);
+                FormClosing += new System.Windows.Forms.FormClosingEventHandler(Form_Closing);
+                Hide();
             }
 
-            else if (FormWindowState.Normal == this.WindowState)
+            else if (WindowState == FormWindowState.Normal)
             {
                 notifyiconApp.Visible = false;
-                this.ShowInTaskbar = true;
-                this.Show();
+                ShowInTaskbar = true;
+                FormClosing -= new System.Windows.Forms.FormClosingEventHandler(Form_Closing);
+                FormClosing += new System.Windows.Forms.FormClosingEventHandler(Form_PuttingInTaskbar);
+                Show();
             }
         }
 
@@ -497,14 +532,12 @@ namespace WindowsFormsApp1
         private void menuitemClose_Click(object sender, EventArgs e)
         {
             SaveUserConfiguration(sender, e);
-            /// the next line disables the re-definition of the FormClosing Event in order to trigger the default one in order to terminate the application.
-            this.FormClosing -= new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             Application.Exit();
         }
 
         /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Title:          FORM - CLOSING
+        /// Title:          FORM - PUTTING IN TASKBAR
         /// Description:    this function overrides the default closing event function in order to prevent to termianate the application.
         ///                 the only way to terminate the application is through the "Close" menu itam of the notify icon in the System Tray.
         /// </summary>
@@ -512,11 +545,27 @@ namespace WindowsFormsApp1
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_PuttingInTaskbar(object sender, FormClosingEventArgs e)
         {
             SaveUserConfiguration(sender, e);
             e.Cancel = true;    /// This line prevent the close of the window
             this.WindowState = FormWindowState.Minimized;   /// This line trigger the Form1_Resize event.
+        }
+
+
+        /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Title:          FORM - CLOSING
+        /// Description:    this function overrides the default closing event function in order to save the user configuration before closing the application.
+        /// </summary>
+        /// 
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
+        private void Form_Closing(object sender, FormClosingEventArgs e)
+        {
+            SaveUserConfiguration(sender, e);
+            Application.Exit();
         }
 
 

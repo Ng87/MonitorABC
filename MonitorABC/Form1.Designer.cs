@@ -289,8 +289,8 @@
             // 
             // timerSetBrightness
             // 
-            this.timerSetBrightness.Tick += new System.EventHandler(this.timerSetBrightness_Tick);
             this.timerSetBrightness.Interval = 150;
+            this.timerSetBrightness.Tick += new System.EventHandler(this.timerSetBrightness_Tick);
             // 
             // Form1
             // 
@@ -311,7 +311,7 @@
             this.ShowInTaskbar = false;
             this.Text = "Monitor Brightness Control";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_PuttingInTaskbar);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.trackbarBrightness)).EndInit();
